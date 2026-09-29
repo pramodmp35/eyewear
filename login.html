@@ -1,0 +1,2326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>STACKLY — Sign in / Create account</title>
+    <meta
+      name="description"
+      content="Sign in to your STACKLY account or create a new one."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        corePlugins: { preflight: false },
+        theme: {
+          extend: {
+            colors: {
+              ink: "#3e3d68",
+              mist: "#7a799d",
+              deep: "#47436f",
+              white: "#ffffff",
+            },
+            fontFamily: {
+              display: ["Outfit", "sans-serif"],
+              body: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* ============================================================
+   1. TOKENS & BASE
+   ============================================================ */
+      :root {
+        --ink: #3e3d68;
+        --mist: #7a799d;
+        --deep: #47436f;
+        --white: #ffffff;
+
+        --radius-card: 26px;
+        --radius-input: 14px;
+        --ease: cubic-bezier(0.55, 0.05, 0.2, 1);
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--ink);
+        background: var(--ink);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      .font-display {
+        font-family: "Outfit", sans-serif;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      a {
+        text-decoration: none;
+      }
+      button {
+        font-family: inherit;
+      }
+
+      .shell {
+        width: 100%;
+        max-width: 1280px;
+        margin-inline: auto;
+        padding-inline: 1.25rem;
+      }
+      @media (min-width: 768px) {
+        .shell {
+          padding-inline: 2rem;
+        }
+      }
+      @media (min-width: 1280px) {
+        .shell {
+          padding-inline: 2.5rem;
+        }
+      }
+
+      /* ============================================================
+   2. AUTH VIEW
+   ============================================================ */
+      .auth-view {
+        position: relative;
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 2rem 0 3rem;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      .auth-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(
+            120% 80% at 12% 8%,
+            rgba(122, 121, 157, 0.5) 0%,
+            rgba(62, 61, 104, 0) 55%
+          ),
+          radial-gradient(
+            80% 70% at 88% 92%,
+            rgba(122, 121, 157, 0.35) 0%,
+            rgba(62, 61, 104, 0) 55%
+          ),
+          linear-gradient(180deg, #3e3d68 0%, #47436f 55%, #3e3d68 100%);
+      }
+      .auth-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(
+          70% 70% at 50% 45%,
+          #000 0%,
+          transparent 100%
+        );
+        -webkit-mask-image: radial-gradient(
+          70% 70% at 50% 45%,
+          #000 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+
+      .auth-blob {
+        position: absolute;
+        z-index: 0;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.45;
+        pointer-events: none;
+        will-change: transform;
+      }
+      .auth-blob--1 {
+        width: 420px;
+        height: 420px;
+        left: -140px;
+        top: 10%;
+        background: radial-gradient(
+          circle,
+          rgba(122, 121, 157, 0.7) 0%,
+          rgba(122, 121, 157, 0) 70%
+        );
+      }
+      .auth-blob--2 {
+        width: 360px;
+        height: 360px;
+        right: -120px;
+        bottom: 8%;
+        background: radial-gradient(
+          circle,
+          rgba(122, 121, 157, 0.55) 0%,
+          rgba(122, 121, 157, 0) 70%
+        );
+      }
+
+      .auth-shell {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.8rem;
+        width: 100%;
+      }
+
+      /* ============================================================
+   3. ROLE SWITCH — REBUILT
+   ============================================================ */
+      .role-switch {
+        position: relative;
+        display: inline-flex;
+        padding: 5px;
+        gap: 0;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 20px 44px -30px rgba(0, 0, 0, 0.7);
+        margin: 0 auto;
+        z-index: 2;
+      }
+
+      .role-switch__btn {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        padding: 0.85rem 1.7rem;
+        min-width: 140px;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: "Outfit", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 999px;
+        transition:
+          background 0.4s var(--ease),
+          color 0.4s var(--ease),
+          box-shadow 0.4s var(--ease),
+          transform 0.25s var(--ease);
+        white-space: nowrap;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .role-switch__btn svg {
+        transition: transform 0.4s var(--ease);
+        flex: none;
+      }
+
+      .role-switch__btn:hover:not(.is-active) {
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .role-switch__btn.is-active {
+        background: #ffffff;
+        color: var(--ink);
+        box-shadow:
+          0 10px 24px -12px rgba(0, 0, 0, 0.55),
+          0 0 0 1px rgba(255, 255, 255, 0.6);
+      }
+
+      .role-switch__btn.is-active svg {
+        transform: scale(1.1);
+      }
+
+      .role-switch__btn:active {
+        transform: scale(0.97);
+      }
+
+      /* ============================================================
+   4. ROLE INDICATOR (below the toggle)
+   ============================================================ */
+      .role-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.55rem 1.1rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        font-family: "Outfit", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.68);
+        margin: 0 auto;
+        transition:
+          background 0.4s ease,
+          border-color 0.4s ease;
+      }
+      .role-indicator .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--mist);
+        box-shadow: 0 0 0 3px rgba(122, 121, 157, 0.3);
+        animation: pulse 2.2s ease-in-out infinite;
+        transition: background 0.4s ease;
+      }
+      .role-indicator strong {
+        color: #fff;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+      }
+      .role-indicator[data-role="admin"] .dot {
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+      }
+      .role-indicator[data-role="admin"] strong {
+        color: #fff;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 3px rgba(122, 121, 157, 0.3);
+        }
+        50% {
+          box-shadow: 0 0 0 8px rgba(122, 121, 157, 0);
+        }
+      }
+
+      /* ============================================================
+   5. FLIP CARD
+   ============================================================ */
+      .auth-flip {
+        display: grid;
+        width: 100%;
+        max-width: 1080px;
+        perspective: 2200px;
+        margin: 0 auto;
+      }
+
+      .auth-face {
+        grid-area: 1 / 1;
+        display: grid;
+        grid-template-columns: 1fr;
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        background: #fff;
+        box-shadow:
+          0 60px 120px -60px rgba(0, 0, 0, 0.6),
+          0 30px 60px -40px rgba(0, 0, 0, 0.4);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform-style: preserve-3d;
+        transition:
+          transform 1s var(--ease),
+          opacity 0.6s ease;
+        will-change: transform;
+      }
+      @media (min-width: 900px) {
+        .auth-face {
+          grid-template-columns: 1fr 1.15fr;
+        }
+      }
+
+      .auth-face--front {
+        transform: rotateY(0deg);
+      }
+      .auth-face--back {
+        transform: rotateY(180deg);
+      }
+
+      .auth-flip.is-flipped .auth-face--front {
+        transform: rotateY(-180deg);
+      }
+      .auth-flip.is-flipped .auth-face--back {
+        transform: rotateY(0deg);
+      }
+
+      @media (max-width: 899px) {
+        .auth-flip {
+          perspective: none;
+        }
+        .auth-face {
+          transform: none !important;
+          transition: opacity 0.5s ease;
+        }
+        .auth-face--front {
+          opacity: 1;
+        }
+        .auth-face--back {
+          opacity: 0;
+          pointer-events: none;
+        }
+        .auth-flip.is-flipped .auth-face--front {
+          opacity: 0;
+          pointer-events: none;
+        }
+        .auth-flip.is-flipped .auth-face--back {
+          opacity: 1;
+          pointer-events: auto;
+        }
+      }
+
+      /* ============================================================
+   6. INFO PANEL (left)
+   ============================================================ */
+      .auth-info {
+        position: relative;
+        padding: 2rem 1.6rem;
+        background: linear-gradient(
+          150deg,
+          #3e3d68 0%,
+          #47436f 55%,
+          #3e3d68 100%
+        );
+        color: #fff;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        isolation: isolate;
+      }
+      @media (min-width: 900px) {
+        .auth-info {
+          padding: 3rem 2.4rem;
+        }
+      }
+
+      .auth-face--back .auth-info {
+        background: linear-gradient(
+          150deg,
+          #47436f 0%,
+          #3e3d68 55%,
+          #47436f 100%
+        );
+      }
+
+      .auth-info::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 34px 34px;
+        mask-image: radial-gradient(
+          80% 80% at 30% 30%,
+          #000 0%,
+          transparent 100%
+        );
+        -webkit-mask-image: radial-gradient(
+          80% 80% at 30% 30%,
+          #000 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+      }
+      .auth-info::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        width: 320px;
+        height: 320px;
+        border-radius: 50%;
+        right: -140px;
+        top: -140px;
+        background: radial-gradient(
+          circle,
+          rgba(122, 121, 157, 0.55) 0%,
+          rgba(122, 121, 157, 0) 70%
+        );
+        pointer-events: none;
+      }
+
+      .auth-info__inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        gap: 1.6rem;
+        width: 100%;
+        max-width: 380px;
+        margin: 0 auto;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+      }
+      .brand-logo {
+        max-height: 52px;
+        width: auto;
+        max-width: 180px;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+      }
+      .brand-name {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: #fff;
+        line-height: 1;
+      }
+      .brand-name span {
+        color: var(--mist);
+      }
+
+      .info-title {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(1.4rem, 3.4vw, 1.9rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        color: #fff;
+        margin: 0;
+        transition: opacity 0.35s ease;
+      }
+      .info-text {
+        font-size: 0.92rem;
+        line-height: 1.75;
+        color: rgba(255, 255, 255, 0.68);
+        margin: 0;
+      }
+
+      .info-features {
+        display: none;
+        flex-direction: column;
+        gap: 0.85rem;
+        padding-top: 1.6rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        margin-top: auto;
+      }
+      @media (min-width: 900px) {
+        .info-features {
+          display: flex;
+        }
+      }
+
+      .info-feature {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        font-size: 0.86rem;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .info-feature__icon {
+        flex: none;
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: #fff;
+        transition:
+          background 0.4s ease,
+          transform 0.4s var(--ease);
+      }
+      .info-feature:hover .info-feature__icon {
+        background: #fff;
+        color: var(--ink);
+        transform: rotate(-6deg) scale(1.05);
+      }
+
+      .info-role {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.42rem 0.85rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        font-family: "Outfit", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.85);
+        align-self: flex-start;
+      }
+      .info-role .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--mist);
+        box-shadow: 0 0 0 3px rgba(122, 121, 157, 0.3);
+        animation: pulse 2.2s ease-in-out infinite;
+      }
+
+      /* ============================================================
+   7. FORM PANEL (right)
+   ============================================================ */
+      .auth-form-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 1.5rem;
+        background: #fff;
+      }
+      @media (min-width: 900px) {
+        .auth-form-panel {
+          padding: 3rem 2.5rem;
+        }
+      }
+
+      .auth-form-panel__inner {
+        width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+      }
+
+      .form-head {
+        margin-bottom: 1.6rem;
+      }
+      .form-head__eyebrow {
+        display: inline-block;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 0.55rem;
+      }
+      .form-head__title {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(1.5rem, 4vw, 1.85rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        margin: 0 0 0.5rem;
+      }
+      .form-head__title em {
+        font-style: normal;
+        background: linear-gradient(100deg, var(--deep) 10%, var(--mist) 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .form-head__text {
+        font-size: 0.88rem;
+        line-height: 1.7;
+        color: var(--mist);
+        margin: 0;
+      }
+
+      .form-alert {
+        display: none;
+        align-items: flex-start;
+        gap: 0.7rem;
+        padding: 0.85rem 1rem;
+        border-radius: 12px;
+        font-size: 0.86rem;
+        line-height: 1.5;
+        margin-bottom: 1.2rem;
+        animation: alertIn 0.35s ease;
+      }
+      @keyframes alertIn {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .form-alert.show {
+        display: flex;
+      }
+      .form-alert svg {
+        flex: none;
+        margin-top: 0.15rem;
+      }
+      .form-alert--error {
+        background: rgba(184, 67, 63, 0.09);
+        border: 1px solid rgba(184, 67, 63, 0.28);
+        color: #9b3936;
+      }
+      .form-alert--success {
+        background: rgba(47, 138, 76, 0.09);
+        border: 1px solid rgba(47, 138, 76, 0.28);
+        color: #276b3e;
+      }
+      .form-alert--info {
+        background: rgba(62, 61, 104, 0.07);
+        border: 1px solid rgba(62, 61, 104, 0.2);
+        color: var(--ink);
+      }
+
+      .field {
+        margin-bottom: 1rem;
+      }
+      .field label {
+        display: block;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 0.45rem;
+      }
+      .field__control {
+        position: relative;
+      }
+      .field input {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        font-family: "Inter", sans-serif;
+        font-size: 0.94rem;
+        color: var(--ink);
+        background: #fbfbfd;
+        border: 1px solid rgba(122, 121, 157, 0.3);
+        border-radius: var(--radius-input);
+        transition:
+          border-color 0.3s ease,
+          box-shadow 0.3s ease,
+          background 0.3s ease;
+      }
+      .field input::placeholder {
+        color: rgba(122, 121, 157, 0.65);
+      }
+      .field input:focus {
+        outline: none;
+        background: #fff;
+        border-color: var(--deep);
+        box-shadow: 0 0 0 4px rgba(122, 121, 157, 0.18);
+      }
+      .field.has-error input {
+        border-color: #b8433f;
+        box-shadow: 0 0 0 4px rgba(184, 67, 63, 0.12);
+      }
+      .field.has-success input {
+        border-color: #2f8a4c;
+        box-shadow: 0 0 0 4px rgba(47, 138, 76, 0.12);
+      }
+
+      .field__error {
+        display: none;
+        margin-top: 0.4rem;
+        font-size: 0.78rem;
+        color: #b8433f;
+        line-height: 1.4;
+      }
+      .field.has-error .field__error {
+        display: block;
+      }
+
+      .field__pw input {
+        padding-right: 3rem;
+      }
+      .pw-toggle {
+        position: absolute;
+        right: 0.6rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--mist);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease;
+      }
+      .pw-toggle:hover {
+        background: rgba(62, 61, 104, 0.08);
+        color: var(--ink);
+      }
+
+      .form-row-2 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      @media (min-width: 520px) {
+        .form-row-2 {
+          grid-template-columns: 1fr 1fr;
+          gap: 0 1rem;
+        }
+      }
+
+      .form-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 0.4rem 0 1.4rem;
+      }
+      .check-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.84rem;
+        color: var(--mist);
+        cursor: pointer;
+        user-select: none;
+      }
+      .check-row input {
+        width: 17px;
+        height: 17px;
+        margin: 0;
+        accent-color: var(--ink);
+        cursor: pointer;
+      }
+
+      .link-forgot {
+        font-size: 0.84rem;
+        font-weight: 600;
+        color: var(--deep);
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+      .link-forgot:hover {
+        color: var(--ink);
+        text-decoration: underline;
+      }
+
+      .btn-submit {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 1rem 1.4rem;
+        border: none;
+        border-radius: 999px;
+        background: var(--ink);
+        color: #fff;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 20px 40px -22px rgba(62, 61, 104, 1);
+        transition:
+          background 0.35s ease,
+          transform 0.35s var(--ease),
+          box-shadow 0.35s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-submit::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          100deg,
+          transparent 20%,
+          rgba(255, 255, 255, 0.18) 50%,
+          transparent 80%
+        );
+        transform: translateX(-100%);
+        transition: transform 0.8s var(--ease);
+      }
+      .btn-submit:hover {
+        background: var(--deep);
+        transform: translateY(-2px);
+        box-shadow: 0 26px 50px -22px rgba(62, 61, 104, 1);
+      }
+      .btn-submit:hover::after {
+        transform: translateX(100%);
+      }
+      .btn-submit:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-submit svg {
+        transition: transform 0.35s var(--ease);
+      }
+      .btn-submit:hover svg {
+        transform: translateX(4px);
+      }
+
+      .form-alt {
+        margin: 1.4rem 0 0;
+        text-align: center;
+        font-size: 0.88rem;
+        color: var(--mist);
+      }
+      .link-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: none;
+        border: none;
+        padding: 0.2rem 0.1rem;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--ink);
+        cursor: pointer;
+        transition:
+          color 0.3s ease,
+          gap 0.35s ease;
+        text-decoration: underline;
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 3px;
+      }
+      .link-switch:hover {
+        color: var(--deep);
+        gap: 0.6rem;
+      }
+      .link-switch svg {
+        transition: transform 0.4s var(--ease);
+      }
+      .link-switch:hover svg {
+        transform: rotate(-15deg);
+      }
+
+      .form-trust {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.6rem;
+        padding-top: 1.2rem;
+        border-top: 1px solid rgba(62, 61, 104, 0.09);
+        font-size: 0.74rem;
+        color: var(--mist);
+        letter-spacing: 0.05em;
+        text-align: center;
+      }
+      .form-trust svg {
+        flex: none;
+        color: var(--deep);
+      }
+
+      .demo-hint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        margin-top: 1rem;
+        padding: 0.6rem 0.9rem;
+        border-radius: 10px;
+        background: rgba(122, 121, 157, 0.1);
+        border: 1px dashed rgba(122, 121, 157, 0.4);
+        font-size: 0.76rem;
+        color: var(--mist);
+        text-align: center;
+      }
+      .demo-hint svg {
+        flex: none;
+        color: var(--deep);
+      }
+
+      /* ============================================================
+   8. TRUST STRIP
+   ============================================================ */
+      .trust-strip {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+        width: 100%;
+        max-width: 1080px;
+        padding: 1.2rem 1.4rem;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+      @media (min-width: 640px) {
+        .trust-strip {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 1rem;
+          padding: 1.3rem 1.6rem;
+        }
+      }
+      .trust-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.82rem;
+        color: rgba(255, 255, 255, 0.78);
+      }
+      .trust-item svg {
+        flex: none;
+        color: var(--mist);
+        transition:
+          transform 0.4s var(--ease),
+          color 0.4s ease;
+      }
+      .trust-item:hover svg {
+        color: #fff;
+        transform: scale(1.1);
+      }
+      .trust-item strong {
+        display: block;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.86rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 0.05rem;
+      }
+      .trust-item span {
+        font-size: 0.74rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      /* ============================================================
+   9. MOTION SAFETY
+   ============================================================ */
+      body.aos-fallback [data-aos] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .force-visible {
+        opacity: 1 !important;
+        transform: none !important;
+        visibility: visible !important;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+        .auth-face {
+          transition: none !important;
+        }
+        .role-switch__btn {
+          transition: none !important;
+        }
+      }
+      :focus-visible {
+        outline: 2px solid var(--deep);
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="auth-view" id="authView">
+      <div class="auth-bg"></div>
+      <div class="auth-blob auth-blob--1" id="blob1"></div>
+      <div class="auth-blob auth-blob--2" id="blob2"></div>
+
+      <div class="shell auth-shell">
+        <!-- ============================
+         ROLE SWITCH — REBUILT
+         ============================ -->
+        <div class="role-switch" id="roleSwitch" data-role="user">
+          <button
+            type="button"
+            class="role-switch__btn is-active"
+            data-role-btn="user"
+            aria-pressed="true"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span>User</span>
+          </button>
+          <button
+            type="button"
+            class="role-switch__btn"
+            data-role-btn="admin"
+            aria-pressed="false"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <span>Admin</span>
+          </button>
+        </div>
+
+        <!-- ROLE INDICATOR -->
+        <div
+          class="role-indicator"
+          id="roleIndicator"
+          data-role="user"
+          aria-live="polite"
+        >
+          <span class="dot"></span>
+          Signing in as <strong id="roleLabel">User</strong>
+        </div>
+
+        <!-- ============================
+         FLIP CARD
+         ============================ -->
+        <div class="auth-flip" id="authFlip">
+          <!-- ============================================
+           FRONT — LOGIN
+           ============================================ -->
+          <section
+            class="auth-face auth-face--front"
+            id="faceLogin"
+            aria-hidden="false"
+          >
+            <aside class="auth-info">
+              <div class="auth-info__inner">
+                <div class="brand">
+                  <!-- 🔧 REPLACE the src below with your STACKLY logo URL -->
+                  <img
+                    class="brand-logo"
+                    id="brandLogoLogin"
+                    src=""
+                    alt="STACKLY logo"
+                  />
+                  <span class="brand-name">STACK<span>LY</span></span>
+                </div>
+
+                <span class="info-role" data-role-info>
+                  <span class="dot"></span>
+                  Welcome back · User
+                </span>
+
+                <h2 class="info-title">See better.<br />Look unmistakable.</h2>
+                <p class="info-text">
+                  Sign in to track orders, manage your prescriptions and access
+                  member-only drops before anyone else.
+                </p>
+
+                <ul class="info-features">
+                  <li class="info-feature">
+                    <span class="info-feature__icon">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+                    <span>Free eye test in any of our 128 studios.</span>
+                  </li>
+                  <li class="info-feature">
+                    <span class="info-feature__icon">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+                    <span>Member pricing on every hand-finished frame.</span>
+                  </li>
+                  <li class="info-feature">
+                    <span class="info-feature__icon">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+                    <span>Lifetime free adjustments and repairs.</span>
+                  </li>
+                </ul>
+              </div>
+            </aside>
+
+            <div class="auth-form-panel">
+              <div class="auth-form-panel__inner">
+                <header class="form-head">
+                  <span class="form-head__eyebrow">Sign in</span>
+                  <h1 class="form-head__title">
+                    Welcome back to <em>STACKLY</em>
+                  </h1>
+                  <p class="form-head__text">
+                    Enter any email and password to continue.
+                  </p>
+                </header>
+
+                <div class="form-alert" id="loginAlert" role="alert"></div>
+
+                <form id="loginForm" novalidate autocomplete="on">
+                  <div class="field" data-field>
+                    <label for="loginEmail">Email address</label>
+                    <input
+                      type="text"
+                      id="loginEmail"
+                      name="email"
+                      placeholder="you@example.com"
+                      autocomplete="email"
+                      required
+                    />
+                    <span class="field__error"
+                      >Please enter your email address.</span
+                    >
+                  </div>
+
+                  <div class="field" data-field>
+                    <label for="loginPassword">Password</label>
+                    <div class="field__control field__pw">
+                      <input
+                        type="password"
+                        id="loginPassword"
+                        name="password"
+                        placeholder="••••••••"
+                        autocomplete="current-password"
+                        required
+                      />
+                      <button
+                        type="button"
+                        class="pw-toggle"
+                        data-pw-toggle
+                        aria-label="Show password"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path
+                            d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"
+                          />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                      </button>
+                    </div>
+                    <span class="field__error"
+                      >Please enter your password.</span
+                    >
+                  </div>
+
+                  <div class="form-options">
+                    <label class="check-row">
+                      <input type="checkbox" id="loginRemember" />
+                      <span>Remember me</span>
+                    </label>
+                    <button
+                      type="button"
+                      class="link-forgot"
+                      onclick="window.location.href = './404.html'"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+
+                  <button type="submit" class="btn-submit">
+                    Sign in
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </button>
+                </form>
+
+                <!-- <div class="demo-hint">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                  </svg>
+                  Demo mode — any email &amp; password will sign you in.
+                </div> -->
+
+                <p class="form-alt">
+                  New to STACKLY?
+                  <button type="button" class="link-switch" data-goto="signup">
+                    Create an account
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </button>
+                </p>
+
+                <div class="form-trust">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  Protected by STACKLY Secure · 256-bit encryption
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ============================================
+           BACK — SIGNUP
+           ============================================ -->
+          <section
+            class="auth-face auth-face--back"
+            id="faceSignup"
+            aria-hidden="true"
+          >
+            <aside class="auth-info">
+              <div class="auth-info__inner">
+                <div class="brand">
+                  <!-- 🔧 REPLACE the src below with your STACKLY logo URL -->
+                  <img
+                    class="brand-logo"
+                    id="brandLogoSignup"
+                    src=""
+                    alt="STACKLY logo"
+                  />
+                  <span class="brand-name">STACK<span>LY</span></span>
+                </div>
+
+                <span class="info-role" data-role-info>
+                  <span class="dot"></span>
+                  Join the club · User
+                </span>
+
+                <h2 class="info-title">Become a<br />STACKLY insider.</h2>
+                <p class="info-text">
+                  Create a free account and unlock member pricing, priority
+                  repairs and early access to every drop.
+                </p>
+
+                <ul class="info-features">
+                  <li class="info-feature">
+                    <span class="info-feature__icon">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+                    <span>Free account — no card required.</span>
+                  </li>
+                  <li class="info-feature">
+                    <span class="info-feature__icon">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+                    <span>15% off your first prescription pair.</span>
+                  </li>
+                  <li class="info-feature">
+                    <span class="info-feature__icon">
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.6"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </span>
+                    <span>Save frames, sync prescriptions, track orders.</span>
+                  </li>
+                </ul>
+              </div>
+            </aside>
+
+            <div class="auth-form-panel">
+              <div class="auth-form-panel__inner">
+                <header class="form-head">
+                  <span class="form-head__eyebrow">Get started</span>
+                  <h1 class="form-head__title">
+                    Create your <em>STACKLY</em> account
+                  </h1>
+                  <p class="form-head__text">
+                    Takes less than a minute. No card needed.
+                  </p>
+                </header>
+
+                <div class="form-alert" id="signupAlert" role="alert"></div>
+
+                <form id="signupForm" novalidate autocomplete="on">
+                  <div class="field" data-field>
+                    <label for="signupName">Full name</label>
+                    <input
+                      type="text"
+                      id="signupName"
+                      name="name"
+                      placeholder="Jane Doe"
+                      autocomplete="name"
+                      required
+                    />
+                    <span class="field__error"
+                      >Please enter your full name.</span
+                    >
+                  </div>
+
+                  <div class="field" data-field>
+                    <label for="signupEmail">Email address</label>
+                    <input
+                      type="text"
+                      id="signupEmail"
+                      name="email"
+                      placeholder="you@example.com"
+                      autocomplete="email"
+                      required
+                    />
+                    <span class="field__error"
+                      >Please enter your email address.</span
+                    >
+                  </div>
+
+                  <div class="form-row-2">
+                    <div class="field" data-field>
+                      <label for="signupPassword">Password</label>
+                      <div class="field__control field__pw">
+                        <input
+                          type="password"
+                          id="signupPassword"
+                          name="password"
+                          placeholder="••••••••"
+                          autocomplete="new-password"
+                          required
+                        />
+                        <button
+                          type="button"
+                          class="pw-toggle"
+                          data-pw-toggle
+                          aria-label="Show password"
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path
+                              d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"
+                            />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        </button>
+                      </div>
+                      <span class="field__error">Please enter a password.</span>
+                    </div>
+
+                    <div class="field" data-field>
+                      <label for="signupConfirm">Confirm</label>
+                      <div class="field__control field__pw">
+                        <input
+                          type="password"
+                          id="signupConfirm"
+                          name="confirm"
+                          placeholder="••••••••"
+                          autocomplete="new-password"
+                          required
+                        />
+                        <button
+                          type="button"
+                          class="pw-toggle"
+                          data-pw-toggle
+                          aria-label="Show password"
+                        >
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path
+                              d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"
+                            />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                        </button>
+                      </div>
+                      <span class="field__error">Passwords don't match.</span>
+                    </div>
+                  </div>
+
+                  <label class="check-row" style="margin: 0.4rem 0 1.4rem">
+                    <input type="checkbox" id="signupTerms" required />
+                    <span
+                      >I agree to the
+                      <a
+                        href="./404.html"
+                        style="color: var(--deep); text-decoration: underline"
+                        >Terms</a
+                      >
+                      &amp;
+                      <a
+                        href="./404.html"
+                        style="color: var(--deep); text-decoration: underline"
+                        >Privacy Policy</a
+                      ></span
+                    >
+                  </label>
+
+                  <button type="submit" class="btn-submit">
+                    Create account
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </button>
+                </form>
+
+                <p class="form-alt">
+                  Already have an account?
+                  <button type="button" class="link-switch" data-goto="login">
+                    Sign in
+                    <svg
+                      width="13"
+                      height="13"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  </button>
+                </p>
+
+                <div class="form-trust">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  Your data is stored locally, never leaves your device.
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ============================
+         TRUST STRIP
+         ============================ -->
+        <div class="trust-strip" data-aos="fade-up" data-aos-delay="200">
+          <div class="trust-item">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <div>
+              <strong>Privacy first</strong>
+              <span>Everything stays on your device</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <div>
+              <strong>Instant access</strong>
+              <span>No email confirmation needed</span>
+            </div>
+          </div>
+          <div class="trust-item">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.9"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+              />
+            </svg>
+            <div>
+              <strong>Member perks</strong>
+              <span>Exclusive drops &amp; pricing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <script>
+      (function () {
+        "use strict";
+
+        /* ==========================================================
+     0. CONFIG
+     ========================================================== */
+        var USERS_KEY = "stackly_users";
+        var SESSION_KEY = "stackly_session";
+        var REDIRECT = {
+          user: "user.html",
+          admin: "admin.html",
+        };
+
+        var reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        var hasAOS = typeof AOS !== "undefined";
+        var hasGSAP = typeof gsap !== "undefined";
+
+        /* ==========================================================
+     1. STORAGE
+     ========================================================== */
+        function getUsers() {
+          try {
+            var raw = localStorage.getItem(USERS_KEY);
+            var arr = raw ? JSON.parse(raw) : [];
+            return Array.isArray(arr) ? arr : [];
+          } catch (e) {
+            return [];
+          }
+        }
+        function saveUsers(users) {
+          try {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+          } catch (e) {}
+        }
+        function findUserIndex(email) {
+          email = (email || "").toLowerCase().trim();
+          var users = getUsers();
+          for (var i = 0; i < users.length; i++) {
+            if ((users[i].email || "").toLowerCase() === email) return i;
+          }
+          return -1;
+        }
+        function upsertUser(record) {
+          var users = getUsers();
+          var idx = findUserIndex(record.email);
+          if (idx === -1) users.push(record);
+          else users[idx] = Object.assign({}, users[idx], record);
+          saveUsers(users);
+        }
+        function setSession(session) {
+          try {
+            if (session)
+              localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+            else localStorage.removeItem(SESSION_KEY);
+          } catch (e) {}
+        }
+
+        /* ==========================================================
+     2. AOS
+     ========================================================== */
+        if (!hasAOS || reduceMotion)
+          document.body.classList.add("aos-fallback");
+        if (hasAOS) {
+          AOS.init({
+            duration: 800,
+            easing: "ease-out-cubic",
+            once: true,
+            offset: 60,
+            disable: reduceMotion,
+          });
+        }
+
+        /* ==========================================================
+     3. HIDE EMPTY LOGO IMGS
+     ========================================================== */
+        function hideEmptyLogos() {
+          document.querySelectorAll(".brand-logo").forEach(function (img) {
+            var src = img.getAttribute("src");
+            if (!src || src.trim() === "" || src === window.location.href)
+              img.style.display = "none";
+            else img.style.display = "";
+          });
+        }
+        hideEmptyLogos();
+
+        /* ==========================================================
+     4. ROLE SWITCH — REBUILT & BULLETPROOF
+     ========================================================== */
+        var roleSwitch = document.getElementById("roleSwitch");
+        var roleIndicator = document.getElementById("roleIndicator");
+        var roleLabel = document.getElementById("roleLabel");
+        var currentRole = "user";
+
+        function setRole(role) {
+          if (role !== "user" && role !== "admin") role = "user";
+          currentRole = role;
+
+          /* 1. Update data-role on the switch */
+          roleSwitch.setAttribute("data-role", role);
+
+          /* 2. Toggle is-active + aria-pressed on the buttons */
+          roleSwitch.querySelectorAll("[data-role-btn]").forEach(function (b) {
+            var isActive = b.getAttribute("data-role-btn") === role;
+            if (isActive) {
+              b.classList.add("is-active");
+              b.setAttribute("aria-pressed", "true");
+            } else {
+              b.classList.remove("is-active");
+              b.setAttribute("aria-pressed", "false");
+            }
+          });
+
+          /* 3. Update the role indicator below the toggle */
+          roleIndicator.setAttribute("data-role", role);
+          roleLabel.textContent = role === "admin" ? "Admin" : "User";
+
+          /* 4. Update info-role labels inside both faces */
+          document.querySelectorAll("[data-role-info]").forEach(function (el) {
+            var isSignup = el.closest(".auth-face--back") !== null;
+            var prefix = isSignup ? "Join the club" : "Welcome back";
+            var roleName = role === "admin" ? "Admin" : "User";
+            el.innerHTML =
+              '<span class="dot"></span>' + prefix + " · " + roleName;
+          });
+
+          /* 5. Clear any open alerts */
+          clearAlert(document.getElementById("loginAlert"));
+          clearAlert(document.getElementById("signupAlert"));
+
+          /* 6. Subtle feedback */
+          if (hasGSAP && !reduceMotion) {
+            var activeBtn = roleSwitch.querySelector(
+              '[data-role-btn="' + role + '"]',
+            );
+            if (activeBtn) {
+              gsap.fromTo(
+                activeBtn,
+                { scale: 0.96 },
+                { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.5)" },
+              );
+            }
+            gsap.fromTo(
+              roleIndicator,
+              { y: 4, opacity: 0.6 },
+              { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" },
+            );
+          }
+        }
+
+        /* Event delegation — works for any click inside the switch */
+        roleSwitch.addEventListener("click", function (e) {
+          var btn = e.target.closest("[data-role-btn]");
+          if (!btn) return;
+          var role = btn.getAttribute("data-role-btn");
+          if (role === currentRole) return;
+          setRole(role);
+        });
+
+        /* Also allow keyboard: Space/Enter on the button already triggers click */
+        roleSwitch.querySelectorAll("[data-role-btn]").forEach(function (b) {
+          b.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              b.click();
+            }
+          });
+        });
+
+        /* ==========================================================
+     5. FLIP CARD
+     ========================================================== */
+        var authFlip = document.getElementById("authFlip");
+        var faceLogin = document.getElementById("faceLogin");
+        var faceSignup = document.getElementById("faceSignup");
+
+        function setFaceInert(view) {
+          if (view === "login") {
+            faceLogin.removeAttribute("inert");
+            faceSignup.setAttribute("inert", "");
+            faceLogin.setAttribute("aria-hidden", "false");
+            faceSignup.setAttribute("aria-hidden", "true");
+          } else {
+            faceLogin.setAttribute("inert", "");
+            faceSignup.removeAttribute("inert");
+            faceLogin.setAttribute("aria-hidden", "true");
+            faceSignup.setAttribute("aria-hidden", "false");
+          }
+        }
+        setFaceInert("login");
+
+        function flipTo(view) {
+          if (view === "signup") {
+            authFlip.classList.add("is-flipped");
+            setFaceInert("signup");
+          } else {
+            authFlip.classList.remove("is-flipped");
+            setFaceInert("login");
+          }
+          if (hasGSAP && !reduceMotion) {
+            var active = view === "signup" ? faceSignup : faceLogin;
+            var targets = active.querySelectorAll(
+              ".form-head, .field, .form-options, .btn-submit, .form-alt, .check-row, .demo-hint",
+            );
+            gsap.fromTo(
+              targets,
+              { y: 14, opacity: 0 },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.5,
+                stagger: 0.03,
+                ease: "power2.out",
+                delay: 0.25,
+                overwrite: true,
+              },
+            );
+          }
+        }
+
+        document.querySelectorAll("[data-goto]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            flipTo(btn.getAttribute("data-goto"));
+          });
+        });
+
+        /* ==========================================================
+     6. PASSWORD VISIBILITY
+     ========================================================== */
+        document.querySelectorAll("[data-pw-toggle]").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            var input = btn.parentElement.querySelector("input");
+            if (!input) return;
+            var show = input.type === "password";
+            input.type = show ? "text" : "password";
+            btn.setAttribute(
+              "aria-label",
+              show ? "Hide password" : "Show password",
+            );
+            btn.innerHTML = show
+              ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+              : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+          });
+        });
+
+        /* ==========================================================
+     7. VALIDATION HELPERS
+     ========================================================== */
+        function setFieldError(field, message) {
+          var wrap = field.closest("[data-field]") || field.parentElement;
+          if (!wrap) return;
+          wrap.classList.add("has-error");
+          wrap.classList.remove("has-success");
+          var err = wrap.querySelector(".field__error");
+          if (err && message) err.textContent = message;
+        }
+        function clearFieldError(field) {
+          var wrap = field.closest("[data-field]") || field.parentElement;
+          if (!wrap) return;
+          wrap.classList.remove("has-error");
+        }
+        function markValid(field) {
+          var wrap = field.closest("[data-field]") || field.parentElement;
+          if (!wrap) return;
+          wrap.classList.remove("has-error");
+          wrap.classList.add("has-success");
+        }
+        function showAlert(el, type, message) {
+          if (!el) return;
+          var icons = {
+            error:
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+            success:
+              '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+            info: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+          };
+          el.className = "form-alert show form-alert--" + type;
+          el.innerHTML = icons[type] + "<div>" + message + "</div>";
+        }
+        function clearAlert(el) {
+          if (!el) return;
+          el.className = "form-alert";
+          el.innerHTML = "";
+        }
+
+        document.querySelectorAll("form input").forEach(function (input) {
+          input.addEventListener("input", function () {
+            clearFieldError(input);
+          });
+        });
+
+        /* ==========================================================
+     8. LOGIN — any email + any password accepted
+     ========================================================== */
+        var loginForm = document.getElementById("loginForm");
+        var loginEmail = document.getElementById("loginEmail");
+        var loginPassword = document.getElementById("loginPassword");
+        var loginRemember = document.getElementById("loginRemember");
+        var loginAlert = document.getElementById("loginAlert");
+
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          clearAlert(loginAlert);
+
+          var email = (loginEmail.value || "").trim();
+          var password = loginPassword.value || "";
+          var valid = true;
+
+          if (!email) {
+            setFieldError(loginEmail, "Please enter your email address.");
+            valid = false;
+          } else {
+            markValid(loginEmail);
+          }
+
+          if (!password) {
+            setFieldError(loginPassword, "Please enter your password.");
+            valid = false;
+          } else {
+            markValid(loginPassword);
+          }
+
+          if (!valid) {
+            if (hasGSAP && !reduceMotion) {
+              gsap.fromTo(
+                loginForm,
+                { x: -6 },
+                { x: 0, duration: 0.4, ease: "elastic.out(1, 0.5)" },
+              );
+            }
+            return;
+          }
+
+          var session = {
+            email: email.toLowerCase(),
+            role: currentRole,
+            loginAt: new Date().toISOString(),
+            remember: !!loginRemember.checked,
+          };
+
+          upsertUser({
+            email: email.toLowerCase(),
+            role: currentRole,
+            lastLogin: session.loginAt,
+          });
+
+          setSession(session);
+
+          showAlert(
+            loginAlert,
+            "success",
+            "Signed in as <strong>" +
+              currentRole.toUpperCase() +
+              "</strong>. Redirecting to your dashboard…",
+          );
+
+          var btn = loginForm.querySelector(".btn-submit");
+          btn.disabled = true;
+
+          var target = REDIRECT[currentRole] || REDIRECT.user;
+
+          setTimeout(function () {
+            window.location.href = target;
+          }, 700);
+        });
+
+        /* ==========================================================
+     9. SIGNUP
+     ========================================================== */
+        var signupForm = document.getElementById("signupForm");
+        var signupName = document.getElementById("signupName");
+        var signupEmail = document.getElementById("signupEmail");
+        var signupPassword = document.getElementById("signupPassword");
+        var signupConfirm = document.getElementById("signupConfirm");
+        var signupTerms = document.getElementById("signupTerms");
+        var signupAlert = document.getElementById("signupAlert");
+
+        signupForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+          clearAlert(signupAlert);
+
+          var valid = true;
+
+          if (!signupName.value.trim() || signupName.value.trim().length < 2) {
+            setFieldError(signupName, "Please enter your full name.");
+            valid = false;
+          } else markValid(signupName);
+
+          if (!signupEmail.value.trim()) {
+            setFieldError(signupEmail, "Please enter your email address.");
+            valid = false;
+          } else markValid(signupEmail);
+
+          if (!signupPassword.value) {
+            setFieldError(signupPassword, "Please enter a password.");
+            valid = false;
+          } else markValid(signupPassword);
+
+          if (
+            signupConfirm.value !== signupPassword.value ||
+            !signupConfirm.value
+          ) {
+            setFieldError(signupConfirm, "Passwords do not match.");
+            valid = false;
+          } else markValid(signupConfirm);
+
+          if (!signupTerms.checked) {
+            showAlert(
+              signupAlert,
+              "error",
+              "Please accept the Terms &amp; Privacy Policy to continue.",
+            );
+            valid = false;
+          }
+
+          if (!valid) {
+            if (hasGSAP && !reduceMotion) {
+              gsap.fromTo(
+                signupForm,
+                { x: -6 },
+                { x: 0, duration: 0.4, ease: "elastic.out(1, 0.5)" },
+              );
+            }
+            return;
+          }
+
+          var newUser = {
+            name: signupName.value.trim(),
+            email: signupEmail.value.trim().toLowerCase(),
+            role: currentRole,
+            createdAt: new Date().toISOString(),
+          };
+
+          upsertUser(newUser);
+
+          showAlert(
+            signupAlert,
+            "success",
+            "✓ Account created! Taking you back to sign in…",
+          );
+
+          setTimeout(function () {
+            signupForm.reset();
+            signupForm
+              .querySelectorAll(".has-error, .has-success")
+              .forEach(function (el) {
+                el.classList.remove("has-error");
+                el.classList.remove("has-success");
+              });
+            loginEmail.value = newUser.email;
+            loginPassword.value = "";
+            flipTo("login");
+            setTimeout(function () {
+              showAlert(
+                loginAlert,
+                "info",
+                "Welcome, <strong>" +
+                  newUser.name.split(" ")[0] +
+                  "</strong>! " +
+                  "Sign in as <strong>" +
+                  newUser.role.toUpperCase() +
+                  "</strong> to continue.",
+              );
+              loginPassword.focus();
+            }, 500);
+          }, 900);
+        });
+
+        /* ==========================================================
+     10. FORGOT PASSWORD
+     ========================================================== */
+        document
+          .getElementById("forgotBtn")
+          .addEventListener("click", function () {
+            var email = (loginEmail.value || "").trim();
+            if (!email) {
+              setFieldError(
+                loginEmail,
+                'Enter your email first, then click "Forgot password".',
+              );
+              loginEmail.focus();
+              return;
+            }
+            showAlert(
+              loginAlert,
+              "info",
+              "A password reset link has been sent to <strong>" +
+                email +
+                "</strong>. (Demo — no email is actually sent.)",
+            );
+          });
+
+        /* ==========================================================
+     11. ENTRANCE ANIMATIONS
+     ========================================================== */
+        if (hasGSAP && !reduceMotion) {
+          gsap.from(".role-switch", {
+            y: -18,
+            opacity: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            delay: 0.1,
+          });
+          gsap.from(".role-indicator", {
+            y: -12,
+            opacity: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            delay: 0.2,
+          });
+          gsap.from(".auth-flip", {
+            y: 28,
+            opacity: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            delay: 0.3,
+          });
+          gsap.from(".trust-strip", {
+            y: 22,
+            opacity: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            delay: 0.6,
+          });
+
+          gsap.to("#blob1", {
+            x: 40,
+            y: 20,
+            duration: 12,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+          });
+          gsap.to("#blob2", {
+            x: -40,
+            y: -30,
+            duration: 14,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+          });
+
+          gsap.from(
+            "#faceLogin .form-head, #faceLogin .field, #faceLogin .form-options, #faceLogin .btn-submit, #faceLogin .demo-hint, #faceLogin .form-alt",
+            {
+              y: 14,
+              opacity: 0,
+              duration: 0.55,
+              stagger: 0.04,
+              ease: "power2.out",
+              delay: 0.8,
+            },
+          );
+        }
+
+        /* ==========================================================
+     12. SAFETY NETS
+     ========================================================== */
+        window.addEventListener("load", function () {
+          if (hasAOS) AOS.refresh();
+          hideEmptyLogos();
+          setRole(currentRole); /* Ensure initial state is applied */
+        });
+
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            document.querySelectorAll("[data-aos]").forEach(function (el) {
+              var r = el.getBoundingClientRect();
+              if (r.top < window.innerHeight && r.bottom > 0) {
+                el.classList.add("aos-animate", "force-visible");
+              }
+            });
+          }, 700);
+        });
+
+        var logoObserver = new MutationObserver(hideEmptyLogos);
+        document.querySelectorAll(".brand-logo").forEach(function (img) {
+          logoObserver.observe(img, {
+            attributes: true,
+            attributeFilter: ["src"],
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

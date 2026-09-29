@@ -1,0 +1,1319 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>STACKLY — Navigation</title>
+    <meta
+      name="description"
+      content="STACKLY — handcrafted eyewear. Navigation component."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        corePlugins: { preflight: false },
+        theme: {
+          extend: {
+            colors: {
+              ink: "#3e3d68",
+              mist: "#7a799d",
+              deep: "#47436f",
+              white: "#ffffff",
+            },
+            fontFamily: {
+              display: ["Outfit", "sans-serif"],
+              body: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* ============================================================
+   1. TOKENS & BASE
+   ============================================================ */
+      :root {
+        --ink: #3e3d68;
+        --mist: #7a799d;
+        --deep: #47436f;
+        --white: #ffffff;
+
+        --nav-h: 76px;
+        --ease: cubic-bezier(0.55, 0.05, 0.2, 1);
+        --ease-out-back: cubic-bezier(0.2, 1.4, 0.4, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--ink);
+        background: #f4f4f9;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      .font-display {
+        font-family: "Outfit", sans-serif;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        font-family: inherit;
+      }
+      body.no-scroll {
+        overflow: hidden;
+      }
+
+      /* ============================================================
+   2. NAVBAR
+   ============================================================ */
+      .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        height: var(--nav-h);
+        background: rgba(255, 255, 255, 0.86);
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        border-bottom: 1px solid rgba(62, 61, 104, 0.08);
+        transition:
+          height 0.45s var(--ease),
+          background 0.45s var(--ease),
+          border-color 0.45s var(--ease),
+          box-shadow 0.45s var(--ease);
+        isolation: isolate;
+      }
+
+      /* Progress bar */
+      .nav__progress {
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        height: 2px;
+        width: 0%;
+        background: linear-gradient(90deg, var(--ink), var(--mist));
+        transition: width 0.1s linear;
+        z-index: 3;
+      }
+
+      /* Scrolled state — condenses and adds shadow */
+      .nav.is-scrolled {
+        height: 64px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 12px 30px -22px rgba(62, 61, 104, 0.9);
+        border-bottom-color: rgba(62, 61, 104, 0.12);
+      }
+
+      .nav__inner {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1280px;
+        margin-inline: auto;
+        padding-inline: 1.1rem;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      @media (min-width: 768px) {
+        .nav__inner {
+          padding-inline: 2rem;
+        }
+      }
+      @media (min-width: 1280px) {
+        .nav__inner {
+          padding-inline: 2.5rem;
+        }
+      }
+
+      /* ---------- Logo ---------- */
+      .nav__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        flex: none;
+        min-width: 0;
+        transition: transform 0.3s var(--ease);
+      }
+      .nav__brand:hover {
+        transform: translateY(-1px);
+      }
+
+      .nav__logo {
+        max-height: 80px;
+        max-width: 160px;
+        width: auto;
+        object-fit: contain;
+        transition: max-height 0.4s var(--ease);
+        flex: none;
+      }
+      .nav.is-scrolled .nav__logo {
+        max-height: 34px;
+      }
+
+      .nav__brand-text {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        line-height: 1;
+        white-space: nowrap;
+        transition: font-size 0.4s var(--ease);
+      }
+      .nav.is-scrolled .nav__brand-text {
+        font-size: 1.25rem;
+      }
+      .nav__brand-text span {
+        color: var(--mist);
+      }
+
+      /* ---------- Desktop nav links ---------- */
+      .nav__links {
+        display: none;
+        align-items: center;
+        gap: 0.15rem;
+        margin-left: auto;
+      }
+      @media (min-width: 1024px) {
+        .nav__links {
+          display: flex;
+        }
+      }
+
+      .nav__link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        padding: 0.6rem 1rem;
+        border-radius: 10px;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.84rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--mist);
+        transition: color 0.3s ease;
+      }
+      .nav__link span {
+        position: relative;
+        z-index: 2;
+      }
+
+      .nav__link::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 6px;
+        transform: translateX(-50%) scaleX(0);
+        transform-origin: center;
+        width: calc(100% - 2rem);
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--ink), var(--mist));
+        transition: transform 0.45s var(--ease);
+      }
+      .nav__link:hover {
+        color: var(--ink);
+      }
+      .nav__link:hover::before {
+        transform: translateX(-50%) scaleX(1);
+      }
+
+      .nav__link.is-active {
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .nav__link.is-active::before {
+        transform: translateX(-50%) scaleX(1);
+        background: linear-gradient(90deg, var(--ink), var(--deep));
+      }
+
+      /* CTA in desktop nav */
+      .nav__cta {
+        display: none;
+        margin-left: 0.8rem;
+        padding: 0.72rem 1.5rem;
+        border-radius: 999px;
+        border: none;
+        background: var(--ink);
+        color: #fff;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 14px 30px -18px rgba(62, 61, 104, 1);
+        transition:
+          background 0.3s ease,
+          transform 0.35s var(--ease),
+          box-shadow 0.35s ease;
+        white-space: nowrap;
+      }
+      @media (min-width: 1024px) {
+        .nav__cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+      }
+      .nav__cta:hover {
+        background: var(--deep);
+        transform: translateY(-2px);
+        box-shadow: 0 22px 40px -20px rgba(62, 61, 104, 1);
+      }
+      .nav__cta svg {
+        transition: transform 0.35s var(--ease);
+      }
+      .nav__cta:hover svg {
+        transform: translateX(3px);
+      }
+
+      /* ---------- Mobile icon buttons ---------- */
+      .nav__icons {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: auto;
+      }
+      @media (min-width: 1024px) {
+        .nav__icons {
+          display: none;
+        }
+      }
+
+      .nav__icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid rgba(62, 61, 104, 0.12);
+        background: #fff;
+        color: var(--ink);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.25s var(--ease);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .nav__icon-btn:hover {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+      .nav__icon-btn:active {
+        transform: scale(0.94);
+      }
+
+      /* Hamburger lines */
+      .hamburger__lines {
+        display: grid;
+        gap: 5px;
+        width: 22px;
+      }
+      .hamburger__lines span {
+        display: block;
+        height: 2px;
+        border-radius: 999px;
+        background: currentColor;
+        transition:
+          transform 0.4s var(--ease),
+          opacity 0.3s ease,
+          width 0.4s var(--ease);
+      }
+      .hamburger__lines span:nth-child(1) {
+        width: 22px;
+      }
+      .hamburger__lines span:nth-child(2) {
+        width: 16px;
+        margin-left: auto;
+      }
+      .hamburger__lines span:nth-child(3) {
+        width: 22px;
+      }
+
+      .nav__icon-btn:hover .hamburger__lines span:nth-child(2) {
+        width: 22px;
+      }
+
+      /* ============================================================
+   3. MOBILE FULLSCREEN MENU
+   ============================================================ */
+      .mobile-menu {
+        position: fixed;
+        inset: 0;
+        z-index: 1100;
+        background:
+          radial-gradient(
+            120% 80% at 12% 8%,
+            rgba(122, 121, 157, 0.55) 0%,
+            rgba(62, 61, 104, 0) 55%
+          ),
+          radial-gradient(
+            80% 70% at 88% 92%,
+            rgba(122, 121, 157, 0.35) 0%,
+            rgba(62, 61, 104, 0) 55%
+          ),
+          linear-gradient(160deg, #3e3d68 0%, #47436f 55%, #3e3d68 100%);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-12px);
+        transition:
+          opacity 0.45s var(--ease),
+          visibility 0.45s var(--ease),
+          transform 0.55s var(--ease);
+        overflow: hidden;
+        isolation: isolate;
+      }
+
+      .mobile-menu.is-open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      /* Decorative grid + glow */
+      .mobile-menu::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.045) 1px,
+            transparent 1px
+          );
+        background-size: 56px 56px;
+        mask-image: radial-gradient(
+          70% 70% at 50% 40%,
+          #000 0%,
+          transparent 100%
+        );
+        -webkit-mask-image: radial-gradient(
+          70% 70% at 50% 40%,
+          #000 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+      .mobile-menu::after {
+        content: "";
+        position: absolute;
+        width: min(70vw, 480px);
+        height: min(70vw, 480px);
+        border-radius: 50%;
+        left: -160px;
+        top: -160px;
+        background: radial-gradient(
+          circle,
+          rgba(122, 121, 157, 0.5) 0%,
+          rgba(122, 121, 157, 0) 70%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .mobile-menu__inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        padding: 1rem 1.1rem 1.5rem;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* Top row inside mobile menu */
+      .mobile-menu__top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        min-height: 56px;
+        margin-bottom: 1.6rem;
+        flex: none;
+      }
+
+      .mobile-menu__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        min-width: 0;
+      }
+      .mobile-menu__logo {
+        max-height: 38px;
+        max-width: 150px;
+        width: auto;
+        object-fit: contain;
+        filter: brightness(0) invert(1);
+        flex: none;
+      }
+      .mobile-menu__brand-text {
+        font-family: "Outfit", sans-serif;
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: #fff;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .mobile-menu__brand-text span {
+        color: var(--mist);
+      }
+
+      /* Close X button */
+      .mobile-menu__close {
+        flex: none;
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease,
+          border-color 0.3s ease,
+          transform 0.4s var(--ease);
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mobile-menu__close:hover {
+        background: #fff;
+        color: var(--ink);
+        border-color: #fff;
+        transform: rotate(90deg);
+      }
+      .mobile-menu__close:active {
+        transform: scale(0.92) rotate(90deg);
+      }
+
+      .mobile-menu__close svg {
+        transition: transform 0.3s var(--ease);
+      }
+
+      /* Nav links */
+      .mobile-menu__links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        padding-top: 0.6rem;
+        flex: 1;
+      }
+
+      .mobile-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.15rem;
+        border-radius: 16px;
+        color: rgba(255, 255, 255, 0.75);
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(1.4rem, 6.5vw, 1.9rem);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        line-height: 1.1;
+        border: 1px solid transparent;
+        transition:
+          background 0.35s ease,
+          color 0.35s ease,
+          border-color 0.35s ease,
+          transform 0.35s var(--ease),
+          padding 0.35s var(--ease);
+        overflow: hidden;
+      }
+      .mobile-link__num {
+        font-family: "Inter", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        color: rgba(255, 255, 255, 0.35);
+        transition: color 0.35s ease;
+        align-self: flex-start;
+        margin-top: 0.35rem;
+      }
+      .mobile-link__text {
+        flex: 1;
+      }
+      .mobile-link__arrow {
+        flex: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+        opacity: 0;
+        transform: translateX(-8px);
+        transition:
+          opacity 0.35s ease,
+          transform 0.35s var(--ease),
+          background 0.3s ease;
+      }
+      .mobile-link:hover,
+      .mobile-link.is-active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        padding-left: 1.45rem;
+      }
+      .mobile-link:hover .mobile-link__num,
+      .mobile-link.is-active .mobile-link__num {
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .mobile-link:hover .mobile-link__arrow,
+      .mobile-link.is-active .mobile-link__arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .mobile-link.is-active {
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      /* Bottom section */
+      .mobile-menu__bottom {
+        margin-top: auto;
+        padding-top: 1.6rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .mobile-menu__cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 1.1rem 1.6rem;
+        border-radius: 999px;
+        border: none;
+        background: #fff;
+        color: var(--ink);
+        font-family: "Outfit", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 20px 40px -22px rgba(255, 255, 255, 0.4);
+        transition:
+          background 0.35s ease,
+          color 0.35s ease,
+          transform 0.35s var(--ease),
+          box-shadow 0.35s ease;
+      }
+      .mobile-menu__cta:hover {
+        background: var(--ink);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 24px 44px -22px rgba(0, 0, 0, 0.6);
+      }
+      .mobile-menu__cta svg {
+        transition: transform 0.35s var(--ease);
+      }
+      .mobile-menu__cta:hover svg {
+        transform: translateX(4px);
+      }
+
+      .mobile-menu__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem 1.4rem;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .mobile-menu__meta a {
+        color: rgba(255, 255, 255, 0.72);
+        transition: color 0.3s ease;
+      }
+      .mobile-menu__meta a:hover {
+        color: #fff;
+      }
+
+      /* Staggered entry for mobile links */
+      .mobile-menu .mobile-link,
+      .mobile-menu .mobile-menu__bottom {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      .mobile-menu.is-open .mobile-link,
+      .mobile-menu.is-open .mobile-menu__bottom {
+        animation: menuItemIn 0.55s var(--ease) forwards;
+      }
+      .mobile-menu.is-open .mobile-link:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .mobile-menu.is-open .mobile-link:nth-child(2) {
+        animation-delay: 0.16s;
+      }
+      .mobile-menu.is-open .mobile-link:nth-child(3) {
+        animation-delay: 0.22s;
+      }
+      .mobile-menu.is-open .mobile-link:nth-child(4) {
+        animation-delay: 0.28s;
+      }
+      .mobile-menu.is-open .mobile-link:nth-child(5) {
+        animation-delay: 0.34s;
+      }
+      .mobile-menu.is-open .mobile-menu__bottom {
+        animation-delay: 0.42s;
+      }
+
+      @keyframes menuItemIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ============================================================
+   4. PAGE DEMO CONTENT
+   ============================================================ */
+      .page {
+        padding-top: var(--nav-h);
+      }
+
+      .hero-demo {
+        min-height: calc(100vh - var(--nav-h));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 4rem 1.25rem;
+        background:
+          radial-gradient(
+            120% 80% at 12% 8%,
+            rgba(122, 121, 157, 0.35) 0%,
+            rgba(62, 61, 104, 0) 55%
+          ),
+          linear-gradient(180deg, #ffffff 0%, #f4f4f9 100%);
+      }
+      .hero-demo__inner {
+        max-width: 720px;
+      }
+      .hero-demo__eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 1rem;
+        border-radius: 999px;
+        background: rgba(62, 61, 104, 0.06);
+        border: 1px solid rgba(62, 61, 104, 0.12);
+        font-family: "Outfit", sans-serif;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--mist);
+        margin-bottom: 1.4rem;
+      }
+      .hero-demo__eyebrow .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--mist);
+        animation: pulseDot 2.2s ease-in-out infinite;
+      }
+      @keyframes pulseDot {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(122, 121, 157, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(122, 121, 157, 0);
+        }
+      }
+
+      .hero-demo h1 {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(2rem, 6vw, 3.4rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+        margin: 0 0 1rem;
+      }
+      .hero-demo h1 em {
+        font-style: normal;
+        background: linear-gradient(100deg, var(--ink), var(--mist));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero-demo p {
+        color: var(--mist);
+        font-size: 1rem;
+        line-height: 1.8;
+        margin: 0 auto 2rem;
+        max-width: 520px;
+      }
+
+      /* ============================================================
+   5. ACCESSIBILITY
+   ============================================================ */
+      :focus-visible {
+        outline: 2px solid var(--deep);
+        outline-offset: 3px;
+        border-radius: 8px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+    <header class="nav" id="mainNav">
+      <div class="nav__progress" id="navProgress"></div>
+
+      <div class="nav__inner">
+        <!-- LOGO -->
+        <a href="./index.html" class="nav__brand" aria-label="STACKLY home">
+          <!-- 🔧 REPLACE the src below with your STACKLY logo URL -->
+          <img
+            class="nav__logo"
+            id="navLogo"
+            src="./assets/logo.webp"
+            alt="STACKLY"
+          />
+          <span class="nav__brand-text" id="navBrandText"
+            >STACK<span>LY</span></span
+          >
+        </a>
+
+        <!-- DESKTOP NAV LINKS -->
+        <nav class="nav__links" aria-label="Primary">
+          <a href="./index.html" class="nav__link is-active" data-page="home"
+            ><span>Home</span></a
+          >
+          <a href="./about.html" class="nav__link" data-page="about"
+            ><span>About Us</span></a
+          >
+
+          <a href="./blogs.html" class="nav__link" data-page="blog"
+            ><span>Blog</span></a
+          >
+          <a href="./contact.html" class="nav__link" data-page="contact"
+            ><span>Contact Us</span></a
+          >
+        </nav>
+
+        <!-- DESKTOP CTA -->
+        <a href="./shop.html" class="nav__cta">
+          Shop Now
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="5" y1="12" x2="19" y2="12" />
+            <polyline points="12 5 19 12 12 19" />
+          </svg>
+        </a>
+
+        <!-- MOBILE ICONS -->
+        <div class="nav__icons">
+          <button
+            type="button"
+            class="nav__icon-btn"
+            id="hamburgerBtn"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobileMenu"
+          >
+            <span class="hamburger__lines" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================================================
+     MOBILE FULLSCREEN MENU
+     ============================================================ -->
+    <div
+      class="mobile-menu"
+      id="mobileMenu"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Main menu"
+    >
+      <div class="mobile-menu__inner">
+        <!-- TOP ROW: logo + close X -->
+        <div class="mobile-menu__top">
+          <div class="mobile-menu__brand">
+            <!-- 🔧 REPLACE the src below with your STACKLY logo URL -->
+            <img
+              class="mobile-menu__logo"
+              id="mobileLogo"
+              src="./assets/logo.webp"
+              alt="STACKLY"
+            />
+            <!-- <span class="mobile-menu__brand-text" id="mobileBrandText"
+              >STACK<span>LY</span></span
+            > -->
+          </div>
+
+          <button
+            type="button"
+            class="mobile-menu__close"
+            id="closeMenuBtn"
+            aria-label="Close menu"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- LINKS -->
+        <nav class="mobile-menu__links" aria-label="Mobile primary">
+          <a href="./index.html" class="mobile-link is-active" data-page="home">
+            <span class="mobile-link__text">Home</span>
+            <!-- <span class="mobile-link__num">01</span> -->
+            <span class="mobile-link__arrow" aria-hidden="true">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </a>
+          <a href="./about.html" class="mobile-link" data-page="about">
+            <span class="mobile-link__text">About Us</span>
+            <!-- <span class="mobile-link__num">02</span> -->
+            <span class="mobile-link__arrow" aria-hidden="true">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </a>
+          <!-- <a href="#" class="mobile-link" data-page="services">
+            <span class="mobile-link__text">Services</span>
+            <span class="mobile-link__num">03</span>
+            <span class="mobile-link__arrow" aria-hidden="true">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </a> -->
+          <a href="./blogs.html" class="mobile-link" data-page="blog">
+            <span class="mobile-link__text">Blog</span>
+            <!-- <span class="mobile-link__num">04</span> -->
+            <span class="mobile-link__arrow" aria-hidden="true">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </a>
+          <a href="./contact.html" class="mobile-link" data-page="contact">
+            <span class="mobile-link__text">Contact Us</span>
+            <!-- <span class="mobile-link__num">05</span> -->
+            <span class="mobile-link__arrow" aria-hidden="true">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+          </a>
+        </nav>
+
+        <!-- BOTTOM: CTA + meta -->
+        <div class="mobile-menu__bottom">
+          <a href="./shop.html" class="mobile-menu__cta">
+            Shop the collection
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+          <!-- <div class="mobile-menu__meta">
+            <span>© 2025 STACKLY</span>
+            <a href="./404.html">Instagram</a>
+            <a href="./404.html">Facebook</a>
+            <a href="./404.html">X</a>
+          </div> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+
+        /* ==========================================================
+     1. HIDE EMPTY LOGOS
+     ========================================================== */
+        function hideEmptyLogos() {
+          var pairs = [
+            { img: "navLogo", fallback: "navBrandText" },
+            { img: "mobileLogo", fallback: "mobileBrandText" },
+          ];
+          pairs.forEach(function (p) {
+            var img = document.getElementById(p.img);
+            var fb = document.getElementById(p.fallback);
+            if (!img) return;
+            var src = img.getAttribute("src");
+            var isEmpty =
+              !src || src.trim() === "" || src === window.location.href;
+            img.style.display = isEmpty ? "none" : "";
+            if (fb) fb.style.display = isEmpty ? "" : "none";
+          });
+        }
+        hideEmptyLogos();
+
+        /* Observe src changes on the two logos */
+        var observer = new MutationObserver(hideEmptyLogos);
+        ["navLogo", "mobileLogo"].forEach(function (id) {
+          var img = document.getElementById(id);
+          if (img)
+            observer.observe(img, {
+              attributes: true,
+              attributeFilter: ["src"],
+            });
+        });
+
+        /* ==========================================================
+     2. NAVBAR SCROLL STATE + PROGRESS BAR
+     ========================================================== */
+        var nav = document.getElementById("mainNav");
+        var progress = document.getElementById("navProgress");
+        var lastScroll = 0;
+
+        function updateNav() {
+          var y = window.scrollY || window.pageYOffset;
+
+          /* Condense on scroll */
+          if (y > 20) nav.classList.add("is-scrolled");
+          else nav.classList.remove("is-scrolled");
+
+          /* Reading progress */
+          var docHeight =
+            document.documentElement.scrollHeight - window.innerHeight;
+          var pct = docHeight > 0 ? (y / docHeight) * 100 : 0;
+          if (progress) progress.style.width = pct + "%";
+
+          lastScroll = y;
+        }
+
+        /* Throttle with rAF */
+        var ticking = false;
+        window.addEventListener(
+          "scroll",
+          function () {
+            if (!ticking) {
+              window.requestAnimationFrame(function () {
+                updateNav();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          },
+          { passive: true },
+        );
+
+        updateNav();
+
+        /* ==========================================================
+     3. MOBILE MENU (full-screen)
+     ========================================================== */
+        var hamburgerBtn = document.getElementById("hamburgerBtn");
+        var closeMenuBtn = document.getElementById("closeMenuBtn");
+        var mobileMenu = document.getElementById("mobileMenu");
+        var menuOpen = false;
+
+        function lockBody() {
+          /* Preserve scroll position when locking body */
+          document.body.style.top = -window.scrollY + "px";
+          document.body.classList.add("no-scroll");
+          document.body.style.position = "fixed";
+          document.body.style.width = "100%";
+        }
+        function unlockBody() {
+          var top = parseInt(document.body.style.top || "0", 10);
+          document.body.classList.remove("no-scroll");
+          document.body.style.position = "";
+          document.body.style.top = "";
+          document.body.style.width = "";
+          if (!isNaN(top) && top < 0) {
+            window.scrollTo(0, -top);
+          }
+        }
+
+        function openMenu() {
+          if (menuOpen) return;
+          menuOpen = true;
+          mobileMenu.classList.add("is-open");
+          hamburgerBtn.setAttribute("aria-expanded", "true");
+          lockBody();
+          /* Focus the close button for keyboard users */
+          setTimeout(function () {
+            closeMenuBtn.focus();
+          }, 260);
+        }
+
+        function closeMenu() {
+          if (!menuOpen) return;
+          menuOpen = false;
+          mobileMenu.classList.remove("is-open");
+          hamburgerBtn.setAttribute("aria-expanded", "false");
+          unlockBody();
+          /* Focus hamburger back */
+          setTimeout(function () {
+            hamburgerBtn.focus();
+          }, 260);
+        }
+
+        hamburgerBtn.addEventListener("click", openMenu);
+        closeMenuBtn.addEventListener("click", closeMenu);
+
+        /* Close on Escape */
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && menuOpen) closeMenu();
+        });
+
+        /* Close when clicking a link inside the mobile menu */
+        mobileMenu.querySelectorAll("a[data-page]").forEach(function (link) {
+          link.addEventListener("click", function () {
+            closeMenu();
+          });
+        });
+
+        /* Auto-close on desktop resize */
+        window.addEventListener("resize", function () {
+          if (window.innerWidth >= 1024 && menuOpen) closeMenu();
+        });
+
+        /* ==========================================================
+     4. ACTIVE LINK SYNC (desktop + mobile)
+     ========================================================== */
+        var desktopLinks = document.querySelectorAll(".nav__link[data-page]");
+        var mobileLinks = document.querySelectorAll(".mobile-link[data-page]");
+
+        function setActive(page) {
+          desktopLinks.forEach(function (l) {
+            l.classList.toggle(
+              "is-active",
+              l.getAttribute("data-page") === page,
+            );
+          });
+          mobileLinks.forEach(function (l) {
+            l.classList.toggle(
+              "is-active",
+              l.getAttribute("data-page") === page,
+            );
+          });
+        }
+
+        desktopLinks.forEach(function (link) {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            setActive(link.getAttribute("data-page"));
+            /* Scroll to top as a demo page action */
+            window.scrollTo({
+              top: 0,
+              behavior: reduceMotion ? "auto" : "smooth",
+            });
+          });
+        });
+
+        mobileLinks.forEach(function (link) {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            setActive(link.getAttribute("data-page"));
+            window.scrollTo({
+              top: 0,
+              behavior: reduceMotion ? "auto" : "smooth",
+            });
+          });
+        });
+
+        /* ==========================================================
+     5. FOCUS TRAP INSIDE MOBILE MENU (basic)
+     ========================================================== */
+        mobileMenu.addEventListener("keydown", function (e) {
+          if (e.key !== "Tab" || !menuOpen) return;
+          var focusables = mobileMenu.querySelectorAll(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          );
+          if (focusables.length === 0) return;
+
+          var first = focusables[0];
+          var last = focusables[focusables.length - 1];
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

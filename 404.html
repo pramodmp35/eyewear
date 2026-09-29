@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>404 — Page Not Found · STACKLY</title>
+    <meta
+      name="description"
+      content="The page you were looking for doesn't exist — but your next favourite frame might."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        corePlugins: { preflight: false },
+        theme: {
+          extend: {
+            colors: {
+              ink: "#3e3d68",
+              mist: "#7a799d",
+              deep: "#47436f",
+              white: "#ffffff",
+            },
+            fontFamily: {
+              display: ["Outfit", "sans-serif"],
+              body: ["Inter", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      /* ============================================================
+   1. TOKENS & BASE
+   ============================================================ */
+      :root {
+        --ink: #3e3d68;
+        --mist: #7a799d;
+        --deep: #47436f;
+        --white: #ffffff;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--ink);
+        background: var(--ink);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      .font-display {
+        font-family: "Outfit", sans-serif;
+      }
+      img {
+        max-width: 100%;
+        display: block;
+      }
+      a {
+        text-decoration: none;
+      }
+      button {
+        font-family: inherit;
+      }
+
+      .shell {
+        width: 100%;
+        max-width: 1280px;
+        margin-inline: auto;
+        padding-inline: 1.25rem;
+      }
+      @media (min-width: 768px) {
+        .shell {
+          padding-inline: 2rem;
+        }
+      }
+      @media (min-width: 1280px) {
+        .shell {
+          padding-inline: 2.5rem;
+        }
+      }
+
+      /* ============================================================
+   2. BUTTONS
+   ============================================================ */
+      .stackly-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        padding: 1rem 2rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+          background 0.35s,
+          color 0.35s,
+          box-shadow 0.35s,
+          border-color 0.35s;
+        min-width: 180px;
+      }
+      .stackly-btn svg {
+        transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      .stackly-btn:hover svg {
+        transform: translateX(4px);
+      }
+
+      .stackly-btn-light {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 18px 36px -22px rgba(255, 255, 255, 0.6);
+      }
+      .stackly-btn-light:hover {
+        background: var(--ink);
+        color: #fff;
+        transform: translateY(-3px);
+        box-shadow: 0 26px 44px -22px rgba(0, 0, 0, 0.5);
+      }
+      .stackly-btn-outline {
+        background: transparent;
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.55);
+      }
+      .stackly-btn-outline:hover {
+        background: #fff;
+        color: var(--ink);
+        border-color: #fff;
+        transform: translateY(-3px);
+      }
+
+      /* ============================================================
+   3. 404 PAGE
+   ============================================================ */
+      .error-page {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 5rem 0;
+        background: var(--ink);
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .error-bg {
+        position: absolute;
+        inset: -10% 0;
+        background-image: url("./assets/p3.svg");
+        background-size: cover;
+        background-position: center;
+        will-change: transform;
+      }
+      .error-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background:
+          radial-gradient(
+            120% 85% at 12% 8%,
+            rgba(122, 121, 157, 0.55) 0%,
+            rgba(62, 61, 104, 0) 58%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(62, 61, 104, 0.92) 0%,
+            rgba(71, 67, 111, 0.82) 45%,
+            rgba(62, 61, 104, 0.98) 100%
+          );
+      }
+      .error-grid-lines {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.045) 1px,
+            transparent 1px
+          );
+        background-size: 64px 64px;
+        mask-image: radial-gradient(
+          80% 60% at 50% 40%,
+          #000 0%,
+          transparent 100%
+        );
+        -webkit-mask-image: radial-gradient(
+          80% 60% at 50% 40%,
+          #000 0%,
+          transparent 100%
+        );
+      }
+
+      .error-inner {
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        width: 100%;
+      }
+
+      /* Big 404 */
+      .error-code {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 1.4rem;
+      }
+
+      .error-code__number {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(6rem, 26vw, 15rem);
+        font-weight: 900;
+        line-height: 0.85;
+        letter-spacing: -0.06em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.04em;
+        user-select: none;
+      }
+      .error-code__number .d {
+        background: linear-gradient(
+          160deg,
+          #ffffff 0%,
+          #b8b7cf 45%,
+          #7a799d 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: inline-block;
+      }
+      .error-code__number .d--middle {
+        background: linear-gradient(180deg, #7a799d 0%, #3e3d68 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: spin 9s ease-in-out infinite;
+        transform-origin: center;
+      }
+      @keyframes spin {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        50% {
+          transform: rotate(-360deg);
+        }
+      }
+
+      /* Glasses-eyes glow behind the zeros */
+      .error-code::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: min(70vw, 640px);
+        height: min(70vw, 640px);
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+          circle,
+          rgba(122, 121, 157, 0.45) 0%,
+          rgba(122, 121, 157, 0) 65%
+        );
+        z-index: -1;
+        pointer-events: none;
+        filter: blur(20px);
+      }
+
+      /* Eyebrow */
+      .error-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(6px);
+        background: rgba(255, 255, 255, 0.06);
+        margin-bottom: 1.6rem;
+      }
+      .error-eyebrow .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #7a799d;
+        box-shadow: 0 0 0 4px rgba(122, 121, 157, 0.28);
+        animation: pulse 2.2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 4px rgba(122, 121, 157, 0.28);
+        }
+        50% {
+          box-shadow: 0 0 0 9px rgba(122, 121, 157, 0);
+        }
+      }
+
+      /* Title */
+      .error-title {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(1.7rem, 5.5vw, 3rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.025em;
+        color: #fff;
+        margin: 0 0 1rem;
+      }
+      .error-title em {
+        font-style: normal;
+        background: linear-gradient(100deg, #ffffff 10%, #7a799d 90%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      /* Lead */
+      .error-lead {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 1rem;
+        line-height: 1.85;
+        max-width: 540px;
+        margin: 0 auto 2.4rem;
+      }
+      @media (min-width: 768px) {
+        .error-lead {
+          font-size: 1.05rem;
+        }
+      }
+
+      /* Actions */
+      .error-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 3.2rem;
+      }
+      @media (min-width: 560px) {
+        .error-actions {
+          flex-direction: row;
+          gap: 1rem;
+        }
+      }
+
+      /* Quick links */
+      .error-links {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem 1.4rem;
+        padding-top: 2.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      .error-links a {
+        font-family: "Outfit", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.62);
+        transition:
+          color 0.3s ease,
+          transform 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .error-links a:hover {
+        color: #fff;
+        transform: translateX(3px);
+      }
+      .error-links a::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--mist);
+        display: inline-block;
+        transition: transform 0.3s ease;
+      }
+      .error-links a:hover::before {
+        transform: scale(1.4);
+      }
+
+      /* Scroll cue */
+      .scroll-cue {
+        position: absolute;
+        left: 50%;
+        bottom: 1.6rem;
+        transform: translateX(-50%);
+        z-index: 4;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.66rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+      }
+      @media (min-width: 768px) {
+        .scroll-cue {
+          display: flex;
+        }
+      }
+      .scroll-cue .line {
+        width: 1px;
+        height: 46px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.7),
+          rgba(255, 255, 255, 0)
+        );
+        position: relative;
+        overflow: hidden;
+      }
+      .scroll-cue .line::after {
+        content: "";
+        position: absolute;
+        top: -46px;
+        left: 0;
+        width: 1px;
+        height: 46px;
+        background: #fff;
+        animation: cue 2s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+      }
+      @keyframes cue {
+        0% {
+          top: -46px;
+        }
+        60%,
+        100% {
+          top: 46px;
+        }
+      }
+
+      /* ============================================================
+   4. MARQUEE (bottom accent)
+   ============================================================ */
+      .marquee {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        background: var(--ink);
+        color: #fff;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 0.9rem 0;
+        isolation: isolate;
+      }
+      .marquee__track {
+        display: flex;
+        gap: 2.4rem;
+        width: max-content;
+        animation: marquee 34s linear infinite;
+        will-change: transform;
+      }
+      @keyframes marquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      .marquee__item {
+        display: inline-flex;
+        align-items: center;
+        gap: 2.4rem;
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(0.95rem, 2vw, 1.25rem);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+      .marquee__item span.star {
+        display: inline-block;
+        color: var(--mist);
+        font-size: 0.5em;
+      }
+
+      /* ============================================================
+   5. SAFETY / MOTION
+   ============================================================ */
+      body.aos-fallback [data-aos] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .force-visible {
+        opacity: 1 !important;
+        transform: none !important;
+        visibility: visible !important;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+          scroll-behavior: auto !important;
+        }
+        .error-code__number .d--middle {
+          animation: none;
+        }
+      }
+
+      :focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 4px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+
+  <body class="font-body">
+    <!-- ============================================================
+     404 SECTION
+     ============================================================ -->
+    <section class="error-page" id="error">
+      <div class="error-bg" id="errorBg"></div>
+      <div class="error-overlay"></div>
+      <div class="error-grid-lines"></div>
+
+      <div class="shell error-inner">
+        <span class="error-eyebrow js-err" data-aos="fade-up">
+          <span class="dot"></span> Error 404
+        </span>
+
+        <!-- Big 404 -->
+        <div class="error-code js-err" data-aos="zoom-in" data-aos-delay="60">
+          <div class="error-code__number" aria-label="404">
+            <span class="d">4</span>
+            <span class="d d--middle">0</span>
+            <span class="d">4</span>
+          </div>
+        </div>
+
+        <h1 class="error-title js-err" data-aos="fade-up" data-aos-delay="120">
+          Hmm, we can't <em>see</em> that page
+        </h1>
+
+        <p class="error-lead js-err" data-aos="fade-up" data-aos-delay="180">
+          The link you followed might be broken, or the page may have been
+          moved. Don't worry — the rest of the collection is right where you
+          left it.
+        </p>
+
+        <!-- Actions -->
+        <div
+          class="error-actions js-err"
+          data-aos="fade-up"
+          data-aos-delay="240"
+        >
+          <button
+            type="button"
+            class="stackly-btn stackly-btn-outline"
+            id="goBackBtn"
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            Go Back
+          </button>
+
+          <a href="./index.html" class="stackly-btn stackly-btn-light">
+            Back to Home
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="scroll-cue js-err" data-aos="fade-up" data-aos-delay="360">
+        <span>Scroll</span>
+        <span class="line"></span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+     MARQUEE
+     ============================================================ -->
+    <div class="marquee">
+      <div class="marquee__track">
+        <div class="marquee__item">
+          <span>Every frame is hand-finished</span><span class="star">●</span>
+          <span>Free shipping over $99</span><span class="star">●</span>
+          <span>2-year warranty</span><span class="star">●</span>
+          <span>30-day returns</span><span class="star">●</span>
+          <span>Lifetime free repairs</span><span class="star">●</span>
+        </div>
+        <div class="marquee__item" aria-hidden="true">
+          <span>Every frame is hand-finished</span><span class="star">●</span>
+          <span>Free shipping over $99</span><span class="star">●</span>
+          <span>2-year warranty</span><span class="star">●</span>
+          <span>30-day returns</span><span class="star">●</span>
+          <span>Lifetime free repairs</span><span class="star">●</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        ).matches;
+        var hasAOS = typeof AOS !== "undefined";
+        var hasGSAP = typeof gsap !== "undefined";
+
+        /* ==========================================================
+     0. SAFETY NET
+     ========================================================== */
+        function forceReveal() {
+          document
+            .querySelectorAll("[data-aos]:not(.aos-animate)")
+            .forEach(function (el) {
+              el.classList.add("aos-animate", "force-visible");
+            });
+        }
+        if (!hasAOS || reduceMotion)
+          document.body.classList.add("aos-fallback");
+
+        /* ==========================================================
+     1. AOS
+     ========================================================== */
+        if (hasAOS) {
+          AOS.init({
+            duration: 900,
+            easing: "ease-out-cubic",
+            once: true,
+            offset: 60,
+            disable: reduceMotion,
+          });
+        }
+
+        /* ==========================================================
+     2. GSAP — background parallax
+     ========================================================== */
+        if (hasGSAP && !reduceMotion) {
+          try {
+            gsap.set(".error-bg", { scale: 1.18 });
+            gsap.to(".error-bg", {
+              yPercent: 10,
+              ease: "none",
+              scrollTrigger: undefined,
+              duration: 0,
+            });
+
+            /* Subtle floating motion on the middle zero */
+            gsap.to(".error-code__number .d--middle", {
+              y: -8,
+              duration: 2.4,
+              ease: "sine.inOut",
+              yoyo: true,
+              repeat: -1,
+            });
+
+            /* Ambient breathing glow behind the 404 */
+            gsap.to(".error-code", {
+              "--glow": 1,
+              duration: 3,
+              ease: "sine.inOut",
+              yoyo: true,
+              repeat: -1,
+            });
+
+            /* Gentle parallax on scroll */
+            gsap.to(".error-bg", {
+              yPercent: 12,
+              ease: "none",
+              scrollTrigger: {
+                trigger: ".error-page",
+                start: "top top",
+                end: "bottom top",
+                scrub: true,
+              },
+            });
+          } catch (err) {
+            forceReveal();
+          }
+        }
+
+        /* ==========================================================
+     3. GO BACK button
+     ========================================================== */
+        var goBackBtn = document.getElementById("goBackBtn");
+        if (goBackBtn) {
+          goBackBtn.addEventListener("click", function () {
+            if (hasGSAP && !reduceMotion) {
+              gsap.fromTo(
+                goBackBtn,
+                { scale: 1 },
+                {
+                  scale: 0.94,
+                  duration: 0.12,
+                  yoyo: true,
+                  repeat: 1,
+                  ease: "power2.inOut",
+                },
+              );
+            }
+            setTimeout(function () {
+              if (window.history.length > 1) {
+                window.history.back();
+              } else {
+                window.location.href = "/";
+              }
+            }, 180);
+          });
+        }
+
+        /* ==========================================================
+     4. Quick links — prevent dead '#' navigation jump
+     ========================================================== */
+        document
+          .querySelectorAll('.error-links a[href="#"]')
+          .forEach(function (a) {
+            a.addEventListener("click", function (e) {
+              e.preventDefault();
+            });
+          });
+
+        /* ==========================================================
+     5. REFRESH + SAFETY NETS
+     ========================================================== */
+        window.addEventListener("load", function () {
+          if (hasAOS) AOS.refresh();
+        });
+
+        window.addEventListener("load", function () {
+          setTimeout(function () {
+            document.querySelectorAll("[data-aos]").forEach(function (el) {
+              var r = el.getBoundingClientRect();
+              if (r.top < window.innerHeight && r.bottom > 0) {
+                el.classList.add("aos-animate", "force-visible");
+              }
+            });
+          }, 600);
+        });
+
+        /* Final safety: everything visible after 2s */
+        setTimeout(function () {
+          document.querySelectorAll(".js-err").forEach(function (el) {
+            var cs = window.getComputedStyle(el);
+            if (parseFloat(cs.opacity) < 0.9) el.classList.add("force-visible");
+          });
+        }, 2000);
+      })();
+    </script>
+  </body>
+</html>
