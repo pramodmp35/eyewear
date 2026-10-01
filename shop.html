@@ -93,7 +93,218 @@
         flex-direction: column;
         min-height: 100vh;
       }
+      /* ============================================================
+   STACKLY PRELOADER
+   ============================================================ */
+      .stackly-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(
+            120% 80% at 12% 8%,
+            rgba(122, 121, 157, 0.55) 0%,
+            rgba(62, 61, 104, 0) 55%
+          ),
+          radial-gradient(
+            80% 70% at 88% 92%,
+            rgba(122, 121, 157, 0.35) 0%,
+            rgba(62, 61, 104, 0) 55%
+          ),
+          linear-gradient(160deg, #3e3d68 0%, #47436f 55%, #3e3d68 100%);
+        color: #fff;
+        opacity: 1;
+        visibility: visible;
+        transition:
+          opacity 0.75s cubic-bezier(0.55, 0.05, 0.2, 1),
+          visibility 0.75s cubic-bezier(0.55, 0.05, 0.2, 1);
+        isolation: isolate;
+        overflow: hidden;
+      }
+      .stackly-loader::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.045) 1px,
+            transparent 1px
+          );
+        background-size: 56px 56px;
+        mask-image: radial-gradient(
+          70% 70% at 50% 50%,
+          #000 0%,
+          transparent 100%
+        );
+        -webkit-mask-image: radial-gradient(
+          70% 70% at 50% 50%,
+          #000 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+        z-index: 0;
+      }
+      .stackly-loader.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
 
+      .stackly-loader__inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1rem;
+      }
+
+      /* Eyeglasses SVG */
+      .stackly-loader__glasses {
+        width: min(220px, 55vw);
+        height: auto;
+        animation: stacklyFloat 3.2s ease-in-out infinite;
+        filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.35));
+      }
+      .stackly-loader__glasses .lens {
+        stroke: #ffffff;
+        stroke-width: 2.4;
+        fill: rgba(255, 255, 255, 0.05);
+        stroke-dasharray: 140;
+        stroke-dashoffset: 140;
+        animation: stacklyDraw 1.3s cubic-bezier(0.55, 0.05, 0.2, 1) forwards;
+      }
+      .stackly-loader__glasses .lens--right {
+        animation-delay: 0.15s;
+      }
+      .stackly-loader__glasses .bridge,
+      .stackly-loader__glasses .temple {
+        stroke: #ffffff;
+        stroke-width: 2.4;
+        stroke-linecap: round;
+        stroke-dasharray: 80;
+        stroke-dashoffset: 80;
+        animation: stacklyDraw 0.9s cubic-bezier(0.55, 0.05, 0.2, 1) forwards;
+      }
+      .stackly-loader__glasses .bridge {
+        animation-delay: 0.55s;
+      }
+      .stackly-loader__glasses .temple--left {
+        animation-delay: 0.7s;
+      }
+      .stackly-loader__glasses .temple--right {
+        animation-delay: 0.85s;
+      }
+      @keyframes stacklyDraw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes stacklyFloat {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      /* Brand text */
+      .stackly-loader__brand {
+        display: flex;
+        gap: 0.14em;
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(1.4rem, 5.5vw, 2rem);
+        font-weight: 800;
+        letter-spacing: 0.28em;
+        color: #ffffff;
+        padding-left: 0.28em; /* balance trailing letter-spacing */
+        text-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+      }
+      .stackly-loader__brand span {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(12px);
+        animation: stacklyLetter 0.55s cubic-bezier(0.55, 0.05, 0.2, 1) forwards;
+      }
+      .stackly-loader__brand span:nth-child(1) {
+        animation-delay: 1.05s;
+      }
+      .stackly-loader__brand span:nth-child(2) {
+        animation-delay: 1.15s;
+      }
+      .stackly-loader__brand span:nth-child(3) {
+        animation-delay: 1.25s;
+      }
+      .stackly-loader__brand span:nth-child(4) {
+        animation-delay: 1.35s;
+      }
+      .stackly-loader__brand span:nth-child(5) {
+        animation-delay: 1.45s;
+      }
+      .stackly-loader__brand span:nth-child(6) {
+        animation-delay: 1.55s;
+      }
+      .stackly-loader__brand span:nth-child(7) {
+        animation-delay: 1.65s;
+      }
+      .stackly-loader__brand span:nth-child(5),
+      .stackly-loader__brand span:nth-child(6),
+      .stackly-loader__brand span:nth-child(7) {
+        color: #b8b7cf;
+      }
+      @keyframes stacklyLetter {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Progress bar */
+      .stackly-loader__bar {
+        width: min(180px, 46vw);
+        height: 2px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.15);
+        overflow: hidden;
+      }
+      .stackly-loader__bar span {
+        display: block;
+        height: 100%;
+        width: 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #ffffff, #7a799d);
+        animation: stacklyBar 1.9s cubic-bezier(0.55, 0.05, 0.2, 1) 0.2s
+          forwards;
+      }
+      @keyframes stacklyBar {
+        to {
+          width: 100%;
+        }
+      }
+
+      /* Reduced motion fallback */
+      @media (prefers-reduced-motion: reduce) {
+        .stackly-loader__glasses,
+        .stackly-loader__glasses .lens,
+        .stackly-loader__glasses .bridge,
+        .stackly-loader__glasses .temple,
+        .stackly-loader__brand span,
+        .stackly-loader__bar span {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          animation-delay: 0ms !important;
+          opacity: 1 !important;
+          transform: none !important;
+          stroke-dashoffset: 0 !important;
+          width: 100% !important;
+        }
+      }
       h1,
       h2,
       h3,
@@ -328,7 +539,7 @@
         flex: none;
       }
       .nav.is-scrolled .nav__logo {
-        max-height: 34px;
+        max-height: 60px;
       }
       .nav__brand-text {
         font-family: "Outfit", sans-serif;
@@ -3649,6 +3860,37 @@
   </head>
 
   <body class="font-body">
+    <!-- ============================================================
+     STACKLY PRELOADER
+     ============================================================ -->
+    <div class="stackly-loader" id="stacklyLoader" aria-hidden="true">
+      <div class="stackly-loader__inner">
+        <svg
+          class="stackly-loader__glasses"
+          viewBox="0 0 200 80"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- Left temple -->
+          <path class="temple temple--left" d="M28 42 L4 32" />
+          <!-- Left lens -->
+          <circle class="lens lens--left" cx="50" cy="45" r="22" />
+          <!-- Bridge -->
+          <path class="bridge" d="M72 42 Q100 28 128 42" />
+          <!-- Right lens -->
+          <circle class="lens lens--right" cx="150" cy="45" r="22" />
+          <!-- Right temple -->
+          <path class="temple temple--right" d="M172 42 L196 32" />
+        </svg>
+
+        <div class="stackly-loader__brand">
+          <span>S</span><span>T</span><span>A</span><span>C</span><span>K</span
+          ><span>L</span><span>Y</span>
+        </div>
+
+        <div class="stackly-loader__bar"><span></span></div>
+      </div>
+    </div>
     <!-- ============================================================
      NAVBAR
      ============================================================ -->
@@ -7200,6 +7442,39 @@
      NAVBAR + FOOTER JS
      ============================================================ -->
     <script>
+      (function () {
+        "use strict";
+
+        var loader = document.getElementById("stacklyLoader");
+        if (!loader) return;
+
+        var hidden = false;
+
+        function hideLoader() {
+          if (hidden) return;
+          hidden = true;
+          loader.classList.add("is-hidden");
+          // Remove from DOM after fade-out completes
+          setTimeout(function () {
+            if (loader && loader.parentNode) {
+              loader.parentNode.removeChild(loader);
+            }
+          }, 800);
+        }
+
+        // Primary trigger: window fully loaded
+        if (document.readyState === "complete") {
+          setTimeout(hideLoader, 1900);
+        } else {
+          window.addEventListener("load", function () {
+            setTimeout(hideLoader, 1900);
+          });
+        }
+
+        // Safety net: never let the loader block the page for more than 5s
+        setTimeout(hideLoader, 5000);
+      })();
+
       (function () {
         "use strict";
 

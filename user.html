@@ -4888,7 +4888,50 @@
             }
           });
         });
+        /* ==========================================================
+     9b. ORDERS STATUS FILTER
+     ========================================================== */
+        (function initOrdersFilter() {
+          var ordersView = document.querySelector(
+            '[data-view-content="orders"]',
+          );
+          if (!ordersView) return;
 
+          var toggle = ordersView.querySelector(".chip-toggle");
+          var rows = ordersView.querySelectorAll("table.table tbody tr");
+          if (!toggle || !rows.length) return;
+
+          function applyFilter(filterText) {
+            var filter = filterText.toLowerCase();
+
+            rows.forEach(function (row) {
+              var badge = row.querySelector(".badge");
+              var status = badge ? badge.textContent.trim().toLowerCase() : "";
+              var show = false;
+
+              if (filter === "all") {
+                show = true;
+              } else if (filter === "active") {
+                // Fallback: treat Active as Pending, Shipped, or Processing
+                show =
+                  status === "pending" ||
+                  status === "shipped" ||
+                  status === "processing";
+              } else {
+                // Exact match for "pending", "shipped", "paid", "refunded"
+                show = status === filter;
+              }
+
+              row.style.display = show ? "" : "none";
+            });
+          }
+
+          toggle.addEventListener("click", function (e) {
+            var btn = e.target.closest("button");
+            if (!btn) return;
+            applyFilter(btn.textContent.trim());
+          });
+        })();
         /* ==========================================================
      9. WISHLIST FAVOURITES
      ========================================================== */
